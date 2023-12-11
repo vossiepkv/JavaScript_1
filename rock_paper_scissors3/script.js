@@ -3,6 +3,11 @@
 //head
 const randomNumber = Math.random();
 
+//grabs data from local storage if null > creates default values
+
+const score = JSON.parse(localStorage.getItem('score')) || { Wins: 0, Losses: 0, Ties: 0 };
+
+
 function playGame(playerMove)
 {
   const computerMove = randomMove();
@@ -17,11 +22,11 @@ function playGame(playerMove)
     }  
     else if (computerMove === 'paper') 
     {
-      result = 'you lose';
+      result = 'You Lose';
     } 
     else if (computerMove === 'scissors') 
     {
-      result = 'you win';
+      result = 'You Win';
     } 
   }
 
@@ -56,8 +61,24 @@ function playGame(playerMove)
     result = 'Tie';
   } 
   }
+
+  if (result === 'You Win')
+  {
+    score.Wins += 1;
+  }
+  else if (result === 'You Lose')
+  {
+    score.Losses += 1;
+  }
+  else if (result === 'Tie')
+  {
+    score.Ties += 1;
+  }
   
-  alert(`You picked ${playerMove}. Computer picked ${computerMove}. ${result}.`);
+  localStorage.setItem('score', JSON.stringify(score));
+  
+  alert(`You picked ${playerMove}. Computer picked ${computerMove}. ${result}.
+Wins:${score.Wins}, Losses:${score.Losses}, Ties${score.Ties}`);
 }
 
 function randomMove() 
@@ -103,4 +124,14 @@ document.getElementById("Scissors").onclick = function ()
 {
   playGame('Scissors')
   randomMove();
+}
+
+document.getElementById("Reset").onclick = function () 
+{
+  score.Wins = 0;
+  score.Losses = 0;
+  score.Ties = 0;
+  localStorage.removeItem('score');
+
+  alert('Your Score Has Been Reset.');
 }
